@@ -1,0 +1,17 @@
+.not-found {
+    text-align: center;
+    padding: 2rem;
+    font-size: 24px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 2rem auto;
+    max-width: 400px;
+  }
+  
+  .not-found h1 {
+    color: #f44336; /* Red color */
+  }
+  
+
+  

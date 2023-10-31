@@ -1,0 +1,33 @@
+.update_form {
+    width: 467px;
+    height: 470px;
+    flex-shrink: 0;
+    border-radius: 30px;
+    border: 0px;
+    background: rgba(120, 121, 241, 0.07);
+    box-shadow: 10px 10px 12px 0px rgba(0, 0, 0, 0.25);
+    margin-left: 400px;
+    margin-top: 40px;
+  }
+  .update_form .header {
+    margin-left: 25px;
+    position: relative;
+  
+  }
+  
+  .update_form .larger_inputContainer {
+    margin-left: 25px;
+  }
+  .update_form .larger_inputContainer .larger_input{
+    width: 403px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #fff;
+    border: 0;
+  }
+  
+  .update_form .larger_inputContainer label{
+    position:relative;
+    top: 30px;
+  }
