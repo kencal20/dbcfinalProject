@@ -29,7 +29,10 @@ export default function SignupComponent() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (userType === "Company" && secretKey !== "6eybj;l,;kp-=0-0-090979865e5322457t87{") {
+    if (
+      userType === "Company" &&
+      secretKey !== "6eybj;l,;kp-=0-0-090979865e5322457t87{"
+    ) {
       alert("Invalid Company. Please enter the correct Secret Key.");
       return;
     }
@@ -38,8 +41,6 @@ export default function SignupComponent() {
       alert("Password and Confirm Password do not match.");
       return;
     }
-
-
 
     fetch("http://localhost:5000/register", {
       method: "POST",
@@ -65,12 +66,18 @@ export default function SignupComponent() {
       .then((data) => {
         setIsAccountCreated(true);
         setAlertMessage("Account Creation Successful");
-        
       })
       .catch((error) => {
         setIsAccountCreated(false);
-        setAlertMessage("Account Creation failure");
+        console.error(error); // Log the error to the console for debugging
+      
+        if (error instanceof Error && error.message.includes('E11000 duplicate key error collection: dbcproject.User index: email_1')) {
+          setAlertMessage("Email is already in use. Please use a different email.");
+        } else {
+          setAlertMessage("Account Creation failure");
+        }
       });
+      
   };
 
   return (
@@ -83,91 +90,93 @@ export default function SignupComponent() {
           </div>
         )}
         <div className="larger_inputContainer">
-        <div>
-          Register AS
-          <input
-            type="radio"
-            name="Usertype"
-            value="user"
-            onChange={(e) => setUserType(e.target.value)}
-          />
-          User
-          <input
-            type="radio"
-            name="Usertype"
-            value="Company"
-            onChange={(e) => setUserType(e.target.value)}
-          />
-          Company
-        </div>
+          <div>
+            Register AS
+            <br />
+            <input
+              type="radio"
+              name="Usertype"
+              value="user"
+              onChange={(e) => setUserType(e.target.value)}
+            />
+            User
+            <br />
+            <input
+              type="radio"
+              name="Usertype"
+              value="Company"
+              onChange={(e) => setUserType(e.target.value)}
+            />
+            Company
+          </div>
 
-        {userType === "Company" ? (
+          {userType === "Company" ? (
+            <div className="mb-3">
+              <input
+                className="form-control larger_input"
+                type="password"
+                placeholder="Secret Key"
+                onChange={(e) => setSecretKey(e.target.value)}
+                required
+              />
+            </div>
+          ) : null}
+
+          <div className="mb-3">
+            <input
+              className="form-control larger_input"
+              type="text"
+              placeholder="First Name"
+              name="fname"
+              value={formData.fname}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              className="form-control larger_input"
+              type="text"
+              placeholder="Last Name"
+              name="lname"
+              value={formData.lname}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              className="form-control larger_input"
+              type="email"
+              placeholder="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
           <div className="mb-3">
             <input
               className="form-control larger_input"
               type="password"
-              placeholder="Secret Key"
-              onChange={(e) => setSecretKey(e.target.value)}
+              placeholder="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
               required
             />
           </div>
-        ) : null}
-
-        <div className="mb-3">
-          <input
-            className="form-control larger_input"
-            type="text"
-            placeholder="First Name"
-            name="fname"
-            value={formData.fname}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <input
-            className="form-control larger_input"
-            type="text"
-            placeholder="Last Name"
-            name="lname"
-            value={formData.lname}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <input
-            className="form-control larger_input"
-            type="email"
-            placeholder="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <input
-            className="form-control larger_input"
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <input
-            className="form-control larger_input"
-            type="password"
-            placeholder="Confirm Password"
-            name="confirmPassword"
-            value={confirmPassword}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+          <div className="mb-3">
+            <input
+              className="form-control larger_input"
+              type="password"
+              placeholder="Confirm Password"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
         </div>
 
         <button type="submit" className="btn btn-primary button">
