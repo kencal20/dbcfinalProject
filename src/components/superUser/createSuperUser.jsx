@@ -132,16 +132,16 @@ export default function CreateSuperUser({ visible, closeModal }) {
       }}
     >
       <form onSubmit={handleSubmit}>
-      {successMessage && (
-        <p className="success-message" style={{ color: "green" }}>
-          {successMessage}
-        </p>
-      )}
+        {successMessage && (
+          <p className="success-message" style={{ color: "green" }}>
+            {successMessage}
+          </p>
+        )}
         {errorMessage && (
-        <p className="error-message" style={{ color: "red" }}>
-          {errorMessage}
-        </p>
-      )}
+          <p className="error-message" style={{ color: "red" }}>
+            {errorMessage}
+          </p>
+        )}
         <div>
           <input
             type="text"
