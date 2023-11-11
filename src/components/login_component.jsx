@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+
 import "./login.css";
 
-export default function LoginComponent() {
+export default function LoginComponent(visible, closeModal, register) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -38,13 +41,13 @@ export default function LoginComponent() {
       .then((data) => {
         if (data.status === "ok") {
           window.localStorage.setItem("token", data.data);
-         
 
           if (formData.userType === "user") {
             navigate("/userHome");
           } else if (formData.userType === "company") {
             navigate("/companyHome");
           }
+          closeModal(); // Close the modal on successful login
         } else if (data.error === "Invalid Password") {
           setError("Invalid Password");
         } else {
@@ -59,6 +62,10 @@ export default function LoginComponent() {
       });
   };
 
+  useEffect(() => {
+    setIsModalOpen(visible);
+  }, [visible]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -68,15 +75,37 @@ export default function LoginComponent() {
   };
 
   return (
-    <div className="whole_page">
-      <div className="random">
-        <h4>Welcome To this Job portal page</h4>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore
-          culpa corporis fugiat iste praesentium esse doloremque quas cumque
-        </p>
-      </div>
-      <form className="login_form" onSubmit={handleSubmit}>
+    <Modal
+      isOpen={isModalOpen}
+      onRequestClose={closeModal}
+      style={{
+        overlay: {
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        },
+        content: {
+          width: "600px",
+          height: "500px",
+          margin: "0px",
+        },
+      }}
+    >
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+          <b
+            type="button"
+            className="close"
+            data-dismiss="alert"
+            aria-label="Close"
+            onClick={() => setError("")}
+            style={{ marginLeft: "400px" }}
+          >
+            <span aria-hidden="true">X</span>
+          </b>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit}>
         <h1 className="heading">Login</h1>
         <div className="large_inputContainer">
           <div className="mb-3">
@@ -116,8 +145,6 @@ export default function LoginComponent() {
           </div>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
-
         <button
           type="submit"
           className="btn btn-primary large_button"
@@ -126,10 +153,7 @@ export default function LoginComponent() {
           {loading ? "Logging in..." : "Submit"}
         </button>
         <br />
-        <div className="no_account">
-          <Link to="/register">Don't have an account? Signup</Link>
-        </div>
       </form>
-    </div>
+    </Modal>
   );
 }

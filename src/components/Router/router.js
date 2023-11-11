@@ -10,15 +10,14 @@ import UserHome from '../users/userHome';
 import SuperUserData from '../superUser/superUserHome';
 import SuperUserLogin from '../superUser/superUserLogin'
 import NotFound from '../notFound';
+import Homepage from "../homepage";
 // import Users from '../users';
 export default function Router() {
 
   return (
     <div>
       <Routes>
-        <Route path='/' element={<LoginComponent />} />
-        <Route path='/login' element={<LoginComponent />} />
-        <Route path='/register' element={<SignupComponent />} />
+        <Route path='/' element={<Homepage />} />
         {/* <Route path='/userDetails' element={<UserDetails />} /> */}
         <Route path='/companyHome' element={<CompanyHome />} />
         <Route path='/updateUser' element={<UpdateUser />} />
