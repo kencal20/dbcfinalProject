@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SignupComponent from "./signup_component";
-import Login2 from "./login2";
+import LoginComponent from "./login_component";
 
 export default function Homepage() {
   const [signupModalVisible, setSignupModalVisible] = useState(false);
@@ -35,7 +35,7 @@ export default function Homepage() {
       <br />
       <br />
       <button className="btn btn-success" onClick={openLoginModal}>Login</button>
-      <Login2 visible={loginModalVisible} closeModal={closeLoginModal} />
+      <LoginComponent visible={loginModalVisible} closeModal={closeLoginModal} />
     </div>
   );
 }
