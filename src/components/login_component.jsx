@@ -4,7 +4,7 @@ import Modal from "react-modal";
 import "./login.css";
 
 export default function LoginComponent(props) {
-  const { visible, closeModal, } = props;
+  const { visible, closeModal } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -109,7 +109,7 @@ export default function LoginComponent(props) {
             data-dismiss="alert"
             aria-label="Close"
             onClick={() => setError("")}
-            style={{ marginLeft: "690px" }}
+            style={{ marginLeft: "580px" }}
           >
             <span aria-hidden="true">X</span>
           </b>

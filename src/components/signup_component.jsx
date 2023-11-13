@@ -37,21 +37,6 @@ export default function SignupComponent({ visible, closeModal, register }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (
-      userType === "Company" &&
-      secretKey !== "6eybj;l,;kp-=0-0-090979865e5322457t87{"
-    ) {
-      setAlertMessage("Invalid Company. Please enter the correct Secret Key.");
-      setIsAccountCreated(false);
-      return;
-    }
-
-    if (formData.password !== confirmPassword) {
-      setAlertMessage("Password and Confirm Password do not match.");
-      setIsAccountCreated(false);
-      return;
-    }
-
     fetch("http://localhost:5000/register", {
       method: "POST",
       headers: {
@@ -95,6 +80,21 @@ export default function SignupComponent({ visible, closeModal, register }) {
 
         console.error(error);
       });
+
+    if (
+      userType === "Company" &&
+      secretKey !== "6eybj;l,;kp-=0-0-090979865e5322457t87{"
+    ) {
+      setAlertMessage("Invalid Company. Please enter the correct Secret Key.");
+      setIsAccountCreated(false);
+      return;
+    }
+
+    if (formData.password !== confirmPassword) {
+      setAlertMessage("Password and Confirm Password do not match.");
+      setIsAccountCreated(false);
+      return;
+    }
   };
 
   return (
@@ -118,10 +118,7 @@ export default function SignupComponent({ visible, closeModal, register }) {
       <div>
         <form onSubmit={handleSubmit}>
           {successMessage && (
-            <p
-              className="success-message alert alert-success"
-              style={{ color: "green" }}
-            >
+            <p className="success-message alert alert-success">
               {successMessage}
               <b
                 type="button"
@@ -144,7 +141,7 @@ export default function SignupComponent({ visible, closeModal, register }) {
                 data-dismiss="alert"
                 aria-label="Close"
                 onClick={() => setAlertMessage("")}
-                style={{ marginLeft: "600px" }}
+                style={{ marginLeft: "470px" }}
               >
                 <span aria-hidden="true">X</span>
               </b>
