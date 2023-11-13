@@ -102,30 +102,35 @@ export default function SuperUserData() {
     setCompanyModalVisible(false);
   };
 
-
   const logout = () => {
     window.localStorage.clear();
     navigate("/superUser/login");
   };
   return (
     <div>
-       
       {loading ? (
         <p>Loading...</p>
       ) : (
         <div>
-             <button className="btn btn-info" onClick={openSuperUserModal}>
-        Create new SuperUser
-      </button>
-      <br />
-      <CreateSuperUser visible={superUserModalVisible} closeModal={closeSuperUserModal} />
+          <button className="btn btn-info" onClick={openSuperUserModal}>
+            Create new SuperUser
+          </button>
+          <br />
+          <CreateSuperUser
+            visible={superUserModalVisible}
+            closeModal={closeSuperUserModal}
+          />
 
-      <i className="fa-solid fa-circle-plus btn-primary" onClick={openCompanyModal}/>
+          <i
+            className="fa-solid fa-circle-plus btn-primary"
+            onClick={openCompanyModal}
+          />
 
-      <CreateCompany visible={companyModalVisible} closeModal={closeCompanyModal} />
+          <CreateCompany
+            visible={companyModalVisible}
+            closeModal={closeCompanyModal}
+          />
 
-
-    
           <UserCompanyTable
             data={data}
             deleteUser={deleteUser}
