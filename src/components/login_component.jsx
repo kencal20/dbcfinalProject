@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
-
 import "./login.css";
 
-export default function LoginComponent(visible, closeModal, register) {
+export default function LoginComponent(props) {
+  const { visible, closeModal, } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -50,8 +50,16 @@ export default function LoginComponent(visible, closeModal, register) {
           closeModal(); // Close the modal on successful login
         } else if (data.error === "Invalid Password") {
           setError("Invalid Password");
+          setFormData({
+            ...formData,
+            password: "", // Clear the password field
+          });
         } else {
           setError("Login Unsuccessful");
+          setFormData({
+            ...formData,
+            password: "", // Clear the password field
+          });
         }
       })
       .catch((error) => {
@@ -83,9 +91,12 @@ export default function LoginComponent(visible, closeModal, register) {
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         },
         content: {
-          width: "600px",
-          height: "500px",
-          margin: "0px",
+          top: "50%",
+          left: "50%",
+          right: "50%",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
         },
       }}
     >
@@ -98,7 +109,7 @@ export default function LoginComponent(visible, closeModal, register) {
             data-dismiss="alert"
             aria-label="Close"
             onClick={() => setError("")}
-            style={{ marginLeft: "400px" }}
+            style={{ marginLeft: "690px" }}
           >
             <span aria-hidden="true">X</span>
           </b>
