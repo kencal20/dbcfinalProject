@@ -9,7 +9,7 @@ export default function UserHome() {
 
   const logout = () => {
     window.localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
 
   // Function to delete the user
@@ -38,7 +38,7 @@ export default function UserHome() {
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     if (!token) {
-      navigate("/login");
+      navigate("/");
       return;
     }
     fetch("http://localhost:5000/userData", {
