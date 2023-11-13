@@ -42,16 +42,12 @@ export default function SignupComponent({ visible, closeModal, register }) {
       secretKey !== "6eybj;l,;kp-=0-0-090979865e5322457t87{"
     ) {
       setAlertMessage("Invalid Company. Please enter the correct Secret Key.");
-      setSuccessMessage("");
-
       setIsAccountCreated(false);
       return;
     }
 
     if (formData.password !== confirmPassword) {
       setAlertMessage("Password and Confirm Password do not match.");
-      setSuccessMessage("");
-
       setIsAccountCreated(false);
       return;
     }
@@ -73,20 +69,31 @@ export default function SignupComponent({ visible, closeModal, register }) {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Failed to create account. Please try again later.");
         }
         return res.json();
       })
       .then((data) => {
-        setSuccessMessage("Account created successfully");
         setAlertMessage("");
+        setSuccessMessage("Account created successfully");
         setIsAccountCreated(true);
       })
       .catch((error) => {
         setIsAccountCreated(false);
-        console.error(error); // Log the error to the console for debugging
 
-    
+        if (!navigator.onLine) {
+          setAlertMessage(
+            "Network error. Please check your internet connection."
+          );
+        } else if (error.message.includes("email")) {
+          setAlertMessage(
+            "User with this email already exists. Please use another email."
+          );
+        } else {
+          setAlertMessage("Failed to create account. Please try again later.");
+        }
+
+        console.error(error);
       });
   };
 
@@ -99,15 +106,18 @@ export default function SignupComponent({ visible, closeModal, register }) {
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         },
         content: {
-          width: "600px",
-          height: "600px",
-          margin: "0px",
+          top: "50%",
+          left: "50%",
+          right: "50%",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
         },
       }}
     >
       <div>
         <form onSubmit={handleSubmit}>
-          {isAccountCreated && (
+          {successMessage && (
             <p
               className="success-message alert alert-success"
               style={{ color: "green" }}
@@ -119,25 +129,22 @@ export default function SignupComponent({ visible, closeModal, register }) {
                 data-dismiss="alert"
                 aria-label="Close"
                 onClick={() => setSuccessMessage("")}
-                style={{ marginLeft: "300px" }}
+                style={{ marginLeft: "700px" }}
               >
                 <span aria-hidden="true">X</span>
               </b>
             </p>
           )}
-          <br />
-
           {alertMessage && (
             <div className="alert alert-danger" role="alert">
               {alertMessage}
-
               <b
                 type="button"
                 className="close"
                 data-dismiss="alert"
                 aria-label="Close"
                 onClick={() => setAlertMessage("")}
-                style={{ marginLeft: "200px" }}
+                style={{ marginLeft: "600px" }}
               >
                 <span aria-hidden="true">X</span>
               </b>
@@ -164,8 +171,7 @@ export default function SignupComponent({ visible, closeModal, register }) {
               />
               Company
             </div>
-
-            {userType === "Company" ? (
+            {userType === "Company" && (
               <div className="mb-3">
                 <input
                   className="form-control larger_input"
@@ -175,8 +181,7 @@ export default function SignupComponent({ visible, closeModal, register }) {
                   required
                 />
               </div>
-            ) : null}
-
+            )}
             <div className="mb-3">
               <input
                 className="form-control larger_input"
@@ -233,7 +238,6 @@ export default function SignupComponent({ visible, closeModal, register }) {
               />
             </div>
           </div>
-
           <button type="submit" className="btn btn-primary button">
             Submit
           </button>
