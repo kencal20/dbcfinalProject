@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import "./login.css";
 
-export default function LoginComponent(props) {
+const LoginComponent = (props) => {
   const { visible, closeModal } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -15,6 +15,23 @@ export default function LoginComponent(props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsModalOpen(visible);
+
+    // Check if the user is already authenticated when the modal opens
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      // Redirect the user to the appropriate home page based on userType
+      const userType = window.localStorage.getItem("userType");
+      if (userType === "user") {
+        navigate("/userHome");
+      } else if (userType === "company") {
+        navigate("/companyHome");
+      }
+      closeModal(); // Close the modal
+    }
+  }, [visible, navigate, closeModal]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,6 +58,7 @@ export default function LoginComponent(props) {
       .then((data) => {
         if (data.status === "ok") {
           window.localStorage.setItem("token", data.data);
+          window.localStorage.setItem("userType", formData.userType);
 
           if (formData.userType === "user") {
             navigate("/userHome");
@@ -69,10 +87,6 @@ export default function LoginComponent(props) {
         setLoading(false);
       });
   };
-
-  useEffect(() => {
-    setIsModalOpen(visible);
-  }, [visible]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -167,4 +181,6 @@ export default function LoginComponent(props) {
       </form>
     </Modal>
   );
-}
+};
+
+export default LoginComponent;
