@@ -9,7 +9,7 @@ export default function CompanyHome() {
 
   const logout = () => {
     window.localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
 
   const deleteCompany = () => {
