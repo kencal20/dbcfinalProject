@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-
+import Input from "../elements/input"
 export default function CreateNewCompany({ visible, closeModal }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -127,7 +127,8 @@ export default function CreateNewCompany({ visible, closeModal }) {
           </p>
         )}
         <div>
-          <input
+          <Input
+          id="largeInput"
             type="text"
             name="name"
             value={formData.name}
@@ -139,7 +140,8 @@ export default function CreateNewCompany({ visible, closeModal }) {
           )}
         </div>
         <div>
-          <input
+          <Input
+          id="largeInput"
             type="email"
             name="email"
             value={formData.email}
@@ -151,7 +153,8 @@ export default function CreateNewCompany({ visible, closeModal }) {
           )}
         </div>
         <div>
-          <input
+          <Input
+          id="largeInput"
             type="password"
             name="password"
             value={formData.password}
@@ -163,7 +166,8 @@ export default function CreateNewCompany({ visible, closeModal }) {
           )}
         </div>
         <div>
-          <input
+          <Input
+          id="largeInput"
             type="password"
             name="confirmPassword"
             value={formData.confirmPassword}
