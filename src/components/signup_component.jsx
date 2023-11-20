@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "./signup.css";
+import Input from "./elements/input";
 
-export default function SignupComponent({ visible, closeModal, register }) {
+const SignupComponent = ({ visible, closeModal }) => {
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -10,15 +11,13 @@ export default function SignupComponent({ visible, closeModal, register }) {
     password: "",
     confirmPassword: "",
     userType: "user",
-    companyName: "",
   });
 
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isAccountCreated, setIsAccountCreated] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [userType, setUserType] = useState("");
-  const [secretKey, setSecretKey] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessages, setErrorMessages] = useState([]);
+  const [userType, setUserType] = useState("");
+  const [isAccountCreated, setIsAccountCreated] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
@@ -49,52 +48,47 @@ export default function SignupComponent({ visible, closeModal, register }) {
         email: formData.email,
         password: formData.password,
         userType,
-        secretKey: userType === "Company" ? secretKey : undefined,
       }),
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Failed to create account. Please try again later.");
+          throw new Error(
+            "Failed to create an account. Please try again later."
+          );
         }
         return res.json();
       })
       .then((data) => {
-        setAlertMessage("");
-        setSuccessMessage("Account created successfully");
-        setIsAccountCreated(true);
+        const errors = [];
+
+        if (formData.password !== confirmPassword) {
+          errors.push("Password and Confirm Password do not match.");
+        }
+
+        if (!navigator.onLine) {
+          errors.push("Network error. Please check your internet connection.");
+        } else if (data.error) {
+          // Check specifically for the email error
+          if (data.error.includes("email") || data.error.includes("exist")) {
+            errors.push("User with this email already exists.");
+          } else {
+            errors.push(data.error);
+          }
+        }
+
+        if (errors.length > 0) {
+          setErrorMessages(errors);
+          setIsAccountCreated(false);
+        } else {
+          setSuccessMessage("Account created successfully");
+          setIsAccountCreated(true);
+        }
       })
       .catch((error) => {
         setIsAccountCreated(false);
-
-        if (!navigator.onLine) {
-          setAlertMessage(
-            "Network error. Please check your internet connection."
-          );
-        } else if (error.message.includes("email")) {
-          setAlertMessage(
-            "User with this email already exists. Please use another email."
-          );
-        } else {
-          setAlertMessage("Failed to create account. Please try again later.");
-        }
-
+        setErrorMessages([]);
         console.error(error);
       });
-
-    if (
-      userType === "Company" &&
-      secretKey !== "6eybj;l,;kp-=0-0-090979865e5322457t87{"
-    ) {
-      setAlertMessage("Invalid Company. Please enter the correct Secret Key.");
-      setIsAccountCreated(false);
-      return;
-    }
-
-    if (formData.password !== confirmPassword) {
-      setAlertMessage("Password and Confirm Password do not match.");
-      setIsAccountCreated(false);
-      return;
-    }
   };
 
   return (
@@ -106,12 +100,10 @@ export default function SignupComponent({ visible, closeModal, register }) {
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         },
         content: {
-          top: "50%",
-          left: "50%",
-          right: "50%",
-          bottom: "auto",
-          marginRight: "-50%",
-          transform: "translate(-50%, -50%)",
+          width: "600px",
+          height: "600px",
+          transition: "right 0.3s ease",
+          right: isModalOpen ? 0 : "-600px"
         },
       }}
     >
@@ -126,32 +118,35 @@ export default function SignupComponent({ visible, closeModal, register }) {
                 data-dismiss="alert"
                 aria-label="Close"
                 onClick={() => setSuccessMessage("")}
-                style={{ marginLeft: "700px" }}
+                style={{ marginLeft: "600px" }}
               >
                 <span aria-hidden="true">X</span>
               </b>
             </p>
           )}
-          {alertMessage && (
+          {errorMessages.length > 0 && (
             <div className="alert alert-danger" role="alert">
-              {alertMessage}
+              <ul>
+                {errorMessages.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
               <b
                 type="button"
                 className="close"
                 data-dismiss="alert"
                 aria-label="Close"
-                onClick={() => setAlertMessage("")}
-                style={{ marginLeft: "470px" }}
+                onClick={() => setErrorMessages([])}
+                style={{ marginLeft: "430px" }}
               >
                 <span aria-hidden="true">X</span>
               </b>
             </div>
           )}
-          <h1 className="heading">Signup</h1>
+
           <div className="larger_inputContainer">
             <div>
-              Register AS
-              <br />
+              <h1>Register As</h1>
               <input
                 type="radio"
                 name="Usertype"
@@ -159,7 +154,6 @@ export default function SignupComponent({ visible, closeModal, register }) {
                 onChange={(e) => setUserType(e.target.value)}
               />
               User
-              <br />
               <input
                 type="radio"
                 name="Usertype"
@@ -168,19 +162,9 @@ export default function SignupComponent({ visible, closeModal, register }) {
               />
               Company
             </div>
-            {userType === "Company" && (
-              <div className="mb-3">
-                <input
-                  className="form-control larger_input"
-                  type="password"
-                  placeholder="Secret Key"
-                  onChange={(e) => setSecretKey(e.target.value)}
-                  required
-                />
-              </div>
-            )}
             <div className="mb-3">
-              <input
+              <Input
+                id="largeInput"
                 className="form-control larger_input"
                 type="text"
                 placeholder="First Name"
@@ -191,7 +175,8 @@ export default function SignupComponent({ visible, closeModal, register }) {
               />
             </div>
             <div className="mb-3">
-              <input
+              <Input
+                id="largeInput"
                 className="form-control larger_input"
                 type="text"
                 placeholder="Last Name"
@@ -202,7 +187,8 @@ export default function SignupComponent({ visible, closeModal, register }) {
               />
             </div>
             <div className="mb-3">
-              <input
+              <Input
+                id="largeInput"
                 className="form-control larger_input"
                 type="email"
                 placeholder="Email"
@@ -213,7 +199,8 @@ export default function SignupComponent({ visible, closeModal, register }) {
               />
             </div>
             <div className="mb-3">
-              <input
+              <Input
+                id="largeInput"
                 className="form-control larger_input"
                 type="password"
                 placeholder="Password"
@@ -224,7 +211,8 @@ export default function SignupComponent({ visible, closeModal, register }) {
               />
             </div>
             <div className="mb-3">
-              <input
+              <Input
+                id="largeInput"
                 className="form-control larger_input"
                 type="password"
                 placeholder="Confirm Password"
@@ -242,4 +230,6 @@ export default function SignupComponent({ visible, closeModal, register }) {
       </div>
     </Modal>
   );
-}
+};
+
+export default SignupComponent;
