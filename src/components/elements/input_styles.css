@@ -1,0 +1,23 @@
+
+.input {
+    background-color: white;
+    color: black;
+    margin-left: 4px;
+    background-color: transparent;
+
+
+  }
+  
+  #largeInput {
+    width: 330px;
+    height: 6vh;
+
+ 
+
+  }
+  
+  #smallInput {
+    width: 200px;
+    height: 4vh;
+  }
+  
